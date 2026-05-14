@@ -1,32 +1,41 @@
-# Real-Time Human-Posture-Detection
+# AI Human Posture Detection 🧘
 
-DTW (Dynamic Time Wrapping) Algorithm is used for matching the accelerometer data to 
-recognize the posture. The code ```live_acc.py``` plots live acceleration data and performs DTW 
-algorithm for ```data.csv``` (real-time data) with the recorded data: ```sitting.csv```, ```standing.csv``` and 
-```sleeping.csv``` for all x, y, z directions. If the posture has minimum cost value for all 3 
-directions, it is the recognized posture and is displayed on the title of the plot. Otherwise, 
-nothing is displayed (indicating a random posture/none of the three given postures).
+A professional computer vision application that detects and classifies human posture (Standing, Sitting, Sleeping) in real-time using Mediapipe and Streamlit.
 
-Used the PhonePI+ app (https://play.google.com/store/apps/details?id=com.phonepiplus&hl=en_US&gl=US) for streaming sensor data to the computer. Reference for the same: https://github.com/priyankark/PhonePi_SampleServer
+## Features
+- **Real-time Detection**: Uses webcam feed for live posture analysis.
+- **Video Upload**: Supports analyzing pre-recorded video files (.mp4, .mov, .avi).
+- **Landmark Visualization**: Displays 33 body landmarks for technical insight.
+- **Smart Classification**: Heuristic-based classification for Standing, Sitting, and Lying down.
 
-List of files with description:
-* ```requirements.txt``` – Contains all the dependencies required
-* ```PhonePi.py``` – Records as well as prints real-time accelerometer data using Flask and Socket
-* ```data.csv``` – Data is recorded in this file in real-time
-* ```sitting.csv``` – Contains recorded data for sitting (plot for the same is shown in the report)
-* ```standing.csv``` – Contains recorded data for standing (plot for the same is in the report)
-* ```sleeping.csv``` – Contains recorded data for sleeping (plot for the same is shown in the report)
-* ```live_acc.py``` – It performs DTW algorithm for data.csv with sitting.csv, standing.csv and sleeping.csv for all x, y, z directions and computes the minimum cost among these. Also plots the accelerometer data in real-time
+## Getting Started
 
-# How to run:
-* Install all the dependencies: ```pip install -r requirements.txt```
-* Clear the data.csv so that fresh data is recorded in the file
-* Run: ```python3 PhonePi.py``` in one terminal
-* Enter the IP address in the PhonePI+ mobile app
-* Change the output format from JSON to CSV in the app
-* Update the frequency to 100 ms for the accelerometer 
-* Turn ON its toggle button. This will start printing real-time acceleration data on the terminal as well as in data.csv
-* Simultaneously, run: ```python3 live_acc.py``` in a different terminal for real-time plotting and posture recognition
-* As soon as the plotting starts, perform any action (posture)
-* If the action is one out of sitting or standing or sleeping, then it is recognized and the corresponding action is displayed on the title of the plot
-* Turn OFF the sensor once the posture is recognized
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone <repo-url>
+   cd Human-Posture-Detection
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+### Running the App
+Launch the Streamlit dashboard:
+```bash
+streamlit run app.py
+```
+
+## Legacy Support (Accelerometer Data)
+The original project using PhonePi and accelerometer data is still available:
+- Run `python PhonePi.py` to collect data.
+- Run `python live_acc.py` for DTW-based classification.
+
+## Tech Stack
+- **Streamlit**: For the interactive web interface.
+- **Mediapipe**: For high-fidelity body pose estimation.
+- **OpenCV**: For video frame processing.
+- **NumPy**: For mathematical calculations.
+
