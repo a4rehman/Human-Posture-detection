@@ -1,9 +1,15 @@
 import streamlit as st
 import cv2
 import mediapipe as mp
-import numpy as np
 import tempfile
 import time
+
+from posture_logic import (
+    calculate_angle,
+    classify_posture,
+    get_status_class,
+    get_status_icon,
+)
 
 # --- Page Config ---
 st.set_page_config(
@@ -196,32 +202,6 @@ def get_pose_model():
 
 pose = get_pose_model()
 
-def calculate_angle(a, b, c):
-    a = np.array(a)
-    b = np.array(b)
-    c = np.array(c)
-    radians = np.arctan2(c[1]-b[1], c[0]-b[0]) - np.arctan2(a[1]-b[1], a[0]-b[0])
-    angle = np.abs(radians * 180.0 / np.pi)
-    if angle > 180.0:
-        angle = 360 - angle
-    return angle
-
-def get_status_class(status):
-    status_map = {
-        "Standing": "status-standing",
-        "Sitting": "status-sitting",
-        "Sleeping / Lying Down": "status-sleeping",
-    }
-    return status_map.get(status, "status-unknown")
-
-def get_status_icon(status):
-    icon_map = {
-        "Standing": "🧍",
-        "Sitting": "🪑",
-        "Sleeping / Lying Down": "🛌",
-    }
-    return icon_map.get(status, "❓")
-
 def process_frame(frame):
     image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     image.flags.writeable = False
@@ -268,14 +248,7 @@ def process_frame(frame):
         vertical_diff = abs(shoulder_mid_y - hip_mid_y)
 
         # Classification logic
-        if vertical_diff < 0.08:
-            posture_status = "Sleeping / Lying Down"
-        elif back_angle > 155:
-            posture_status = "Standing"
-        elif 70 < back_angle < 130:
-            posture_status = "Sitting"
-        else:
-            posture_status = "Analyzing..."
+        posture_status = classify_posture(back_angle, vertical_diff)
 
         # Draw pose landmarks
         mp_drawing.draw_landmarks(
